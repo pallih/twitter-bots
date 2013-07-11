@@ -16,33 +16,33 @@ chars = string.letters + string.digits
 randomstring=  ''.join([random.choice(chars) for i in xrange(4)]) # create a random string for url appending to avoid cache
 
 def landspitali_tweet():
-	url = 'http://landspitali.is?x=' + randomstring
-	html = requests.get(url).text
-	root = lxml.html.fromstring(html)
-	space = ' '
-	strings = root.xpath('//div[@class="activityNumbers activityNumbersNew"]')
-	for s in strings:
-		record = {}
-   	 	messages = []
-   	 	for d in s[1:]:
-        		record['ward'] =  d.attrib['class']
-        		record['time'] = d[0].text
-        		record['number'] = d[1].text
-        		record['tail'] = d[2].text
-        		record['date_time'] = time.strftime("%a %b %e %T %z %Y", time.gmtime())
-        		msg = record['time'].replace('...',':') + space + record['number'] +space + record['tail']
-        		messages.append(msg)
+    url = 'http://landspitali.is?x=' + randomstring
+    html = requests.get(url).text
+    root = lxml.html.fromstring(html)
+    space = ' '
+    strings = root.xpath('//div[@class="activityNumbers activityNumbersNew"]')
+    for s in strings:
+        record = {}
+        messages = []
+        for d in s[1:]:
+            record['ward'] =  d.attrib['class']
+            record['time'] = d[0].text
+            record['number'] = d[1].text
+            record['tail'] = d[2].text
+            record['date_time'] = time.strftime("%a %b %e %T %z %Y", time.gmtime())
+            msg = record['time'].replace('...',':') + space + record['number'] +space + record['tail']
+            messages.append(msg)
 
-	tweet = random.choice(messages)
-    	try:
-    		auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    		auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-    		api = tweepy.API(auth)
-    		api.update_status(tweet)
-    		return True
-   	except Exception, e:
-   			print 'Failed to send tweet: %s' % tweet, e
-    			return False
+    tweet = random.choice(messages)
+    try:
+        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+        auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
+        api = tweepy.API(auth)
+        api.update_status(tweet)
+        return True
+    except Exception, e:
+        print 'Failed to send tweet: %s' % tweet, e
+        return False
 
 #landspitali_tweet()
 #import cloud
