@@ -22,9 +22,9 @@ def landspitali_tweet():
     root = lxml.html.fromstring(html)
     space = ' '
     strings = root.xpath('//div[@class="activityNumbers activityNumbersNew"]')
+    messages = []
     for s in strings:
         record = {}
-        messages = []
         for d in s[1:]:
             record['ward'] = d.attrib['class']
             record['time'] = d[0].text
@@ -33,6 +33,10 @@ def landspitali_tweet():
             record['date_time'] = time.strftime("%a %b %e %T %z %Y", time.gmtime())
             msg = record['time'].replace('...', ':') + space + record['number'] + space + record['tail']
             messages.append(msg)
+
+    if not messages:
+        print "Could not find any relevant information from %s" % url
+        return False
 
     tweet = random.choice(messages)
     try:
