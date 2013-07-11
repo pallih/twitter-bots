@@ -31,6 +31,9 @@ def landspitali_tweet():
         		record['tail'] = d[2].text
         		record['date_time'] = time.strftime("%a %b %e %T %z %Y", time.gmtime())
         		msg = record['time'].replace('...',':') + space + record['number'] +space + record['tail']
+                # Don't tweet about surgeries if none are taking place
+                if record['ward'] == 'surgeries' and record['number'] == "0":
+                    continue
         		messages.append(msg)
 
 	tweet = random.choice(messages)
